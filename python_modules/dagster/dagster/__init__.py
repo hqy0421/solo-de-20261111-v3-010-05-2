@@ -329,8 +329,10 @@ from dagster._core.definitions.partitions.definition import (
     MonthlyPartitionsDefinition as MonthlyPartitionsDefinition,
     MultiPartitionsDefinition as MultiPartitionsDefinition,
     PartitionsDefinition as PartitionsDefinition,
+    SessionPartitionsDefinition as SessionPartitionsDefinition,
     StaticPartitionsDefinition as StaticPartitionsDefinition,
     TimeWindowPartitionsDefinition as TimeWindowPartitionsDefinition,
+    TradingSession as TradingSession,
     WeeklyPartitionsDefinition as WeeklyPartitionsDefinition,
 )
 from dagster._core.definitions.partitions.mapping import (
@@ -341,9 +343,11 @@ from dagster._core.definitions.partitions.mapping import (
     MultiPartitionMapping as MultiPartitionMapping,
     MultiToSingleDimensionPartitionMapping as MultiToSingleDimensionPartitionMapping,
     PartitionMapping as PartitionMapping,
+    SessionPartitionMapping as SessionPartitionMapping,
     SpecificPartitionsPartitionMapping as SpecificPartitionsPartitionMapping,
     StaticPartitionMapping as StaticPartitionMapping,
     TimeWindowPartitionMapping as TimeWindowPartitionMapping,
+    TimeWindowToSessionPartitionMapping as TimeWindowToSessionPartitionMapping,
 )
 from dagster._core.definitions.partitions.partition import Partition as Partition
 from dagster._core.definitions.partitions.partition_key_range import (

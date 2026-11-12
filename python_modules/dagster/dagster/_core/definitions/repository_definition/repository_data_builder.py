@@ -29,6 +29,7 @@ from dagster._core.definitions.partitions.definition import (
     DynamicPartitionsDefinition,
     MultiPartitionsDefinition,
     PartitionsDefinition,
+    SessionPartitionsDefinition,
     StaticPartitionsDefinition,
     TimeWindowPartitionsDefinition,
 )
@@ -61,6 +62,7 @@ VALID_PARTITIONS_DEFINITION_CLASSES = (
     DynamicPartitionsDefinition,
     TimeWindowPartitionsDefinition,
     MultiPartitionsDefinition,
+    SessionPartitionsDefinition,
 )
 
 

@@ -17,6 +17,9 @@ from dagster._core.definitions.partitions.definition.dynamic import DynamicParti
 from dagster._core.definitions.partitions.definition.partitions_definition import (
     PartitionsDefinition,
 )
+from dagster._core.definitions.partitions.definition.session import (
+    SessionPartitionsDefinition,
+)
 from dagster._core.definitions.partitions.definition.static import StaticPartitionsDefinition
 from dagster._core.definitions.partitions.definition.time_window import (
     TimeWindowPartitionsDefinition,
@@ -48,6 +51,7 @@ ALLOWED_PARTITION_DIMENSION_TYPES = (
     StaticPartitionsDefinition,
     TimeWindowPartitionsDefinition,
     DynamicPartitionsDefinition,
+    SessionPartitionsDefinition,
 )
 
 

@@ -23,6 +23,7 @@ if TYPE_CHECKING:
         DynamicPartitionsDefinition,
         MultiPartitionsDefinition,
         PartitionsDefinition,
+        SessionPartitionsDefinition,
         StaticPartitionsDefinition,
         TimeWindowPartitionsDefinition,
     )
@@ -35,6 +36,7 @@ class PartitionsSnap(ABC):
         from dagster._core.definitions.partitions.definition import (
             DynamicPartitionsDefinition,
             MultiPartitionsDefinition,
+            SessionPartitionsDefinition,
             StaticPartitionsDefinition,
             TimeWindowPartitionsDefinition,
         )
@@ -47,9 +49,11 @@ class PartitionsSnap(ABC):
             return MultiPartitionsSnap.from_def(partitions_def)
         elif isinstance(partitions_def, DynamicPartitionsDefinition):
             return DynamicPartitionsSnap.from_def(partitions_def)
+        elif isinstance(partitions_def, SessionPartitionsDefinition):
+            return SessionPartitionsSnap.from_def(partitions_def)
         else:
             raise DagsterInvalidDefinitionError(
-                "Only static, time window, multi-dimensional partitions, and dynamic partitions"
+                "Only static, time window, multi-dimensional, session, and dynamic partitions"
                 " definitions with a name parameter are currently supported."
             )
 
@@ -241,3 +245,84 @@ class DynamicPartitionsSnap(PartitionsSnap):
         from dagster._core.definitions.partitions.definition import DynamicPartitionsDefinition
 
         return DynamicPartitionsDefinition(name=self.name)
+
+
+@whitelist_for_serdes(storage_name="ExternalSessionPartitionsDefinitionData")
+@record
+class SessionPartitionsSnap(PartitionsSnap):
+    """Serializable snapshot of a :class:`SessionPartitionsDefinition`.
+
+    Stores the full explicit calendar: each session's stable key and its absolute
+    ``[start, end)`` window timestamps with the shared IANA timezone. Because absolute
+    timestamps (not wall-clock strings) are persisted, cross-midnight sessions and DST
+    transition days round-trip exactly, and session keys -- the partition identity -- are
+    preserved independently of any window edits.
+    """
+
+    timezone: str
+    sessions: Sequence["SessionSnapEntry"]
+
+    @classmethod
+    def from_def(cls, partitions_def: "SessionPartitionsDefinition") -> Self:  # ty: ignore[invalid-method-override]
+        from dagster._core.definitions.partitions.definition import (
+            SessionPartitionsDefinition,
+        )
+
+        check.inst_param(partitions_def, "partitions_def", SessionPartitionsDefinition)
+        return cls(
+            timezone=partitions_def.timezone,
+            sessions=[
+                SessionSnapEntry(
+                    session_key=session.session_key,
+                    windows=[
+                        SessionSnapWindow(
+                            start=window.start_timestamp,
+                            end=window.end_timestamp,
+                        )
+                        for window in session.windows
+                    ],
+                )
+                for session in partitions_def.sessions
+            ],
+        )
+
+    def get_partitions_definition(self):
+        from dagster._core.definitions.partitions.definition import (
+            SessionPartitionsDefinition,
+            TradingSession,
+        )
+        from dagster._core.definitions.partitions.definition.session import (
+            PersistedSessionWindow,
+        )
+        from dagster._core.definitions.timestamp import TimestampWithTimezone
+
+        sessions = [
+            TradingSession(
+                session_key=entry.session_key,
+                timezone=self.timezone,
+                windows=[
+                    PersistedSessionWindow(
+                        TimestampWithTimezone(window.start, self.timezone),
+                        TimestampWithTimezone(window.end, self.timezone),
+                    )
+                    for window in entry.windows
+                ],
+            )
+            for entry in self.sessions
+        ]
+        return SessionPartitionsDefinition(sessions=sessions, timezone=self.timezone)
+
+
+@whitelist_for_serdes(storage_name="ExternalSessionSnapEntry")
+@record
+class SessionSnapEntry:
+    session_key: str
+    windows: Sequence["SessionSnapWindow"]
+
+
+@whitelist_for_serdes(storage_name="ExternalSessionSnapWindow")
+@record
+class SessionSnapWindow:
+    # Absolute Unix timestamps so DST/cross-midnight semantics are preserved on round trip.
+    start: float
+    end: float

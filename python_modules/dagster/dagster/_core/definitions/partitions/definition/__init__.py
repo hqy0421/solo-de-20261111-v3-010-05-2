@@ -7,6 +7,10 @@ from dagster._core.definitions.partitions.definition.multi import (
 from dagster._core.definitions.partitions.definition.partitions_definition import (
     PartitionsDefinition as PartitionsDefinition,
 )
+from dagster._core.definitions.partitions.definition.session import (
+    SessionPartitionsDefinition as SessionPartitionsDefinition,
+    TradingSession as TradingSession,
+)
 from dagster._core.definitions.partitions.definition.static import (
     StaticPartitionsDefinition as StaticPartitionsDefinition,
 )

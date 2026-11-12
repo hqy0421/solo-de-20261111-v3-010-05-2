@@ -20,6 +20,10 @@ Partitions Definitions
 
 .. autoclass:: TimeWindowPartitionsDefinition
 
+.. autoclass:: SessionPartitionsDefinition
+
+.. autoclass:: TradingSession
+
 .. autoclass:: TimeWindow
 
 .. autoclass:: StaticPartitionsDefinition
@@ -46,6 +50,10 @@ Partition mapping
 .. autoclass:: PartitionMapping
 
 .. autoclass:: TimeWindowPartitionMapping
+
+.. autoclass:: SessionPartitionMapping
+
+.. autoclass:: TimeWindowToSessionPartitionMapping
 
 .. autoclass:: IdentityPartitionMapping
 

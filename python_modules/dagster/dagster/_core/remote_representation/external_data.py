@@ -76,6 +76,7 @@ from dagster._core.definitions.op_definition import OpDefinition
 from dagster._core.definitions.partitions.definition import (
     DynamicPartitionsDefinition,
     MultiPartitionsDefinition,
+    SessionPartitionsDefinition,
     StaticPartitionsDefinition,
     TimeWindowPartitionsDefinition,
 )
@@ -83,6 +84,7 @@ from dagster._core.definitions.partitions.mapping import PartitionMapping
 from dagster._core.definitions.partitions.snap import (
     DynamicPartitionsSnap,
     MultiPartitionsSnap,
+    SessionPartitionsSnap,
     PartitionsSnap,
     StaticPartitionsSnap,
     TimeWindowPartitionsSnap,
@@ -600,6 +602,8 @@ class PartitionSetSnap:
             partitions_snap = DynamicPartitionsSnap.from_def(partitions_def)
         elif isinstance(partitions_def, MultiPartitionsDefinition):
             partitions_snap = MultiPartitionsSnap.from_def(partitions_def)
+        elif isinstance(partitions_def, SessionPartitionsDefinition):
+            partitions_snap = SessionPartitionsSnap.from_def(partitions_def)
         else:
             partitions_snap = None
 

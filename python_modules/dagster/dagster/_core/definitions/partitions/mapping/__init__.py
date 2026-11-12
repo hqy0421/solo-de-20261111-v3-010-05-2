@@ -21,6 +21,10 @@ from dagster._core.definitions.partitions.mapping.multi.multi_to_single import (
 from dagster._core.definitions.partitions.mapping.partition_mapping import (
     PartitionMapping as PartitionMapping,
 )
+from dagster._core.definitions.partitions.mapping.session import (
+    SessionPartitionMapping as SessionPartitionMapping,
+    TimeWindowToSessionPartitionMapping as TimeWindowToSessionPartitionMapping,
+)
 from dagster._core.definitions.partitions.mapping.specific_partitions import (
     SpecificPartitionsPartitionMapping as SpecificPartitionsPartitionMapping,
 )

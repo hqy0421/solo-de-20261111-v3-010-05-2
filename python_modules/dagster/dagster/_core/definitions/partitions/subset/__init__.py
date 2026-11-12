@@ -10,6 +10,9 @@ from dagster._core.definitions.partitions.subset.key_ranges import (
 from dagster._core.definitions.partitions.subset.partitions_subset import (
     PartitionsSubset as PartitionsSubset,
 )
+from dagster._core.definitions.partitions.subset.session import (
+    SessionPartitionsSubset as SessionPartitionsSubset,
+)
 from dagster._core.definitions.partitions.subset.time_window import (
     TimeWindowPartitionsSubset as TimeWindowPartitionsSubset,
 )

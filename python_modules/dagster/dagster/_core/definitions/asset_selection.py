@@ -1503,6 +1503,8 @@ class PartitionsAssetSelection(AssetSelection):
     - ``"time"`` - selects assets with a ``TimeWindowPartitionsDefinition`` (including hourly, daily,
       weekly, and monthly subclasses)
     - ``"multipartitions"`` - selects assets with a ``MultiPartitionsDefinition``
+    - ``"session"`` - selects assets with a ``SessionPartitionsDefinition`` (trading-calendar
+      sessions made up of explicit time windows)
     """
 
     selected_partitions: str | None
@@ -1516,6 +1518,9 @@ class PartitionsAssetSelection(AssetSelection):
             DynamicPartitionsDefinition,
         )
         from dagster._core.definitions.partitions.definition.multi import MultiPartitionsDefinition
+        from dagster._core.definitions.partitions.definition.session import (
+            SessionPartitionsDefinition,
+        )
         from dagster._core.definitions.partitions.definition.static import (
             StaticPartitionsDefinition,
         )
@@ -1537,6 +1542,8 @@ class PartitionsAssetSelection(AssetSelection):
                 return isinstance(partitions_def, TimeWindowPartitionsDefinition)
             elif partition_type == "multipartitions":
                 return isinstance(partitions_def, MultiPartitionsDefinition)
+            elif partition_type == "session":
+                return isinstance(partitions_def, SessionPartitionsDefinition)
             return False
 
         return {node.key for node in asset_graph.asset_nodes if _matches(node)}

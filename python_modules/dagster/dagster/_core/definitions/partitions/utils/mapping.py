@@ -38,6 +38,20 @@ def infer_partition_mapping(
         ):
             return TimeWindowPartitionMapping()
         else:
+            from dagster._core.definitions.partitions.definition import (
+                SessionPartitionsDefinition,
+            )
+            from dagster._core.definitions.partitions.mapping import (
+                SessionPartitionMapping,
+                TimeWindowToSessionPartitionMapping,
+            )
+
+            if isinstance(downstream_partitions_def, SessionPartitionsDefinition):
+                if isinstance(upstream_partitions_def, SessionPartitionsDefinition):
+                    return SessionPartitionMapping()
+                elif isinstance(upstream_partitions_def, TimeWindowPartitionsDefinition):
+                    # e.g. minute-bar time-window partitions feeding a per-session summary
+                    return TimeWindowToSessionPartitionMapping()
             return IdentityPartitionMapping()
     else:
         return AllPartitionMapping()
@@ -51,9 +65,11 @@ def get_builtin_partition_mapping_types() -> tuple[type["PartitionMapping"], ...
         LastPartitionMapping,
         MultiPartitionMapping,
         MultiToSingleDimensionPartitionMapping,
+        SessionPartitionMapping,
         SpecificPartitionsPartitionMapping,
         StaticPartitionMapping,
         TimeWindowPartitionMapping,
+        TimeWindowToSessionPartitionMapping,
     )
 
     return (
@@ -65,6 +81,8 @@ def get_builtin_partition_mapping_types() -> tuple[type["PartitionMapping"], ...
         TimeWindowPartitionMapping,
         MultiToSingleDimensionPartitionMapping,
         MultiPartitionMapping,
+        SessionPartitionMapping,
+        TimeWindowToSessionPartitionMapping,
     )
 
 

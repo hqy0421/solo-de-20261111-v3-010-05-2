@@ -18,6 +18,7 @@ from dagster._core.definitions.partitions.definition import (
     DynamicPartitionsDefinition,
     MultiPartitionsDefinition,
     PartitionsDefinition,
+    SessionPartitionsDefinition,
     StaticPartitionsDefinition,
     TimeWindowPartitionsDefinition,
 )
@@ -41,6 +42,7 @@ CACHEABLE_PARTITION_TYPES = (
     MultiPartitionsDefinition,
     StaticPartitionsDefinition,
     DynamicPartitionsDefinition,
+    SessionPartitionsDefinition,
 )
 RUN_FETCH_BATCH_SIZE = 100
 

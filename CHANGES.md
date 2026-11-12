@@ -4,6 +4,7 @@
 
 ### New
 
+- Added `SessionPartitionsDefinition`, a partitions definition built on an explicit trading calendar where each partition key (e.g. a business date) maps to one or more non-overlapping trading time windows, correctly representing lunch breaks, early closes, cross-midnight overnight sessions, and DST transition days. Minute/hourly data can be aggregated into session summaries with the new `TimeWindowToSessionPartitionMapping`, whose dependencies cover actual trading time only; `SessionPartitionMapping` maps between two session calendars and reports missing upstream sessions. Partition identity is the stable session key, so serialization/deserialization preserves identities and dependencies.
 - [ui] Run pages now start loading logs sooner.
 - [ui] The code location overview, deployment code locations list, and sensor and schedule detail pages now have mobile layouts.
 - [ui] Improved global search performance on the home page and catalog.
